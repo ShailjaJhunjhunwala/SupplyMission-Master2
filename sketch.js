@@ -1,34 +1,44 @@
-
+var helicopterIMG, helicopterSprite, packageSprite,packageIMG;
+var packageBody,ground
 const Engine = Matter.Engine;
 const World = Matter.World;
 const Bodies = Matter.Bodies;
 const Body = Matter.Body;
 
-var engine,world;
-var paddle,paddle1,paddle2;
-var gound;
-var ball;
-
 function preload()
 {
-	 	
-	 	
+	helicopterIMG=loadImage("helicopter.png")
+	packageIMG=loadImage("package.png")
 }
 
 function setup() {
 	createCanvas(800, 700);
-    rectMode(CENTER)
+	rectMode(CENTER);
 	engine = Engine.create();
 	world = engine.world;
+	
 
-	paddle = new Dustbin(650,650,200,20)
-    paddle1 = new Dustbin(740,590,20,100)	
-    paddle2 = new Dustbin(560,590,20,100)
+	packageSprite=createSprite(width/2, 80, 10,10);
+	packageSprite.addImage(packageIMG)
+	packageSprite.scale=0.2
+	
 
-	ground = createSprite(width/2,660,800,20)
-	ground.shapeColor = color("white")
+	helicopterSprite=createSprite(width/2, 200, 10,10);
+	helicopterSprite.addImage(helicopterIMG)
+	helicopterSprite.scale=0.6
 
-    ball = createSprite(100,620,20,20)
+	groundSprite=createSprite(width/2, height-35, width,10);
+	groundSprite.shapeColor=color(255)
+	
+	packageBody = Bodies.circle(width/2 , 200 , 5 , {restitution:0.3, isStatic:true});
+	World.add(world, packageBody);
+
+
+	ground = Bodies.rectangle(width/2, 650, 800, 10 , {isStatic:true} );
+ 	World.add(world, ground);
+
+   
+
 
 	Engine.run(engine);
   
@@ -38,18 +48,18 @@ function setup() {
 function draw() {
   rectMode(CENTER);
   background(0);
-  paddle.display();
-  paddle1.display();
-  paddle2.display();
+  packageSprite.x= packageBody.position.x 
+  packageSprite.y= packageBody.position.y 
   keyPressed();
   drawSprites();
 }
 
-function keyPressed(){
-
-	if(keyCode === UP_ARROW){
-		Matter.ball.applyForce(ball.body,ball.body.position,{x:85,y:-85})
-	}
+function keyPressed() {
+ if (keyCode === DOWN_ARROW) {
+	packageIMG.velocityY = 0.1;
+	Matter.Body.setStatic(packageBody,false) 
+	
+  }
 }
 
 
